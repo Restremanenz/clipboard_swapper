@@ -1,6 +1,8 @@
 #include "file_helper.h"
 #include <stdlib.h>
 #include <errno.h>
+#include <string.h>
+#include <assert.h>
 
 
 /* This function returns one of the READALL_ constants above.
@@ -70,4 +72,34 @@ int readFile(FILE *in, char **dataptr, size_t *sizeptr)
     *sizeptr = used;
 
     return READALL_OK;
+}
+
+
+/* this functions splits a string into pairs of two, based on two seperator-strings.
+    returns  0 if operation was successful
+    returns -1 if one of the input parameters was NULL
+    returns -2 if memory allocation failed
+*/
+int splitData(char *data, size_t size, const char *first_sep, const char *second_sep, spair_t **pairsptr, size_t *paircntptr)
+{
+    if (data == NULL || size == 0 || pairsptr == NULL || paircntptr == NULL) return -1;
+
+    spair_t *pairs = (spair_t *)malloc(sizeof(spair_t));
+    if (pairs == NULL) return -2;
+
+    size_t paircnt = 0;
+
+    pairs[paircnt].first = strtok(data, first_sep);
+
+    while (pairs[paircnt].first != NULL)
+    {
+        pairs[paircnt++].second = strtok(NULL, second_sep);
+        pairs = realloc(pairs, (paircnt + 1) * sizeof(spair_t));
+        pairs[paircnt].first = strtok(NULL, first_sep);
+    }
+
+    *pairsptr = pairs;
+    *paircntptr = paircnt;
+
+    return 0;
 }

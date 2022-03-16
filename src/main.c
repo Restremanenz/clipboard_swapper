@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include "file_helper.h"
 
@@ -11,9 +12,17 @@ int main()
     assert(f);
     
     int res = readFile(f, &fileContent, &length);
+    fclose(f);
     assert(res == 0);
 
-    printf("%s\n", fileContent);
+    spair_t *pairs = (spair_t *)malloc(sizeof(spair_t));
+    assert(pairs != NULL);
 
+    size_t paircnt = 0;
+
+    res = splitData(fileContent, length, ",", "\n", &pairs, &paircnt);
+    assert(res == 0);
+
+    free(pairs);
     return 0;
 }

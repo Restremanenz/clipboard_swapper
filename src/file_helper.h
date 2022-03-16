@@ -26,4 +26,13 @@
 int readFile(FILE *in, char **dataptr, size_t *sizeptr);
 
 
+typedef struct spair_t
+{
+   char* first;
+   char* second;
+}spair_t;
+
+int splitData(char *data, size_t size, const char *first_sep, const char *second_sep, spair_t **pairsptr, size_t *paircntptr);
+
+
 #endif // FILE_HELPER_H
