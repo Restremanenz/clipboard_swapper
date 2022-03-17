@@ -5,6 +5,12 @@
 #include "file_helper.h"
 #include "libclipboard.h"
 
+#ifndef _WIN32
+#  include <unistd.h>
+#else
+#  include <windows.h>
+#endif
+
 int main()
 {
     char* fileContent = 0;
@@ -40,10 +46,8 @@ int main()
     {
         // different sleep functions dependent on os
         #ifndef _WIN32
-        #  include <unistd.h>
             sleep(1);
         #else
-        #  include <windows.h>
             Sleep(1000);
         #endif
 
