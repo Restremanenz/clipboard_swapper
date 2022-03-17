@@ -12,11 +12,13 @@ DBG_PATH := debug
 
 LIB_DIR=./libclipboard
 LIBS=-L$(LIB_DIR)/lib/ -lclipboard
+CMAKE=
 INCLUDES=-I./libclipboard/include/
 
 # compile macros
 TARGET_NAME := clipboard_swapper
 ifeq ($(OS),Windows_NT)
+	CMAKE += -DLIBCLIPBOARD_FORCE_WIN32=on
 	TARGET_NAME := $(addsuffix .exe,$(TARGET_NAME))
 else
 	LIBS += -lpthread -lxcb
@@ -54,12 +56,16 @@ $(TARGET_DEBUG): $(OBJ_DEBUG)
 
 $(LIB_DIR):
 	git clone https://github.com/jtanx/libclipboard.git
-	cmake -S $(LIB_DIR) -B $(LIB_DIR)
+	cmake $(CMAKE) -S $(LIB_DIR) -B $(LIB_DIR)
 	make -j4 -C ./libclipboard/
 
 # phony rules
 .PHONY:install
-install:$(LIB_DIR) makedir all
+install:rmlib $(LIB_DIR) makedir all
+
+.PHONY:rmlib
+rmlib:
+	@rm -rf libclipboard
 
 .PHONY: makedir
 makedir:
