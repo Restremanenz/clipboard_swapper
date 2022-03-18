@@ -1,7 +1,8 @@
 # tool macros
 CC ?= gcc
-CCFLAGS := -Wall -O2 -pedantic -DNDEBUG
-DBGFLAGS := -g
+CCFLAGS := -Wall
+RLSFLAGS := -DNDEBUG -O3
+DBGFLAGS := -g -O0
 CCOBJFLAGS := $(CCFLAGS) -c
 
 # path macros
@@ -43,10 +44,10 @@ default: makedir all
 
 # non-phony targets
 $(TARGET): $(OBJ)
-	$(CC) $(CCFLAGS) -o $@ $(OBJ) $(LIBS)
+	$(CC) $(CCFLAGS) $(RLSFLAGS) -o $@ $(OBJ) $(LIBS)
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c*
-	$(CC) $(CCOBJFLAGS) -o $@ $< $(INCLUDES)
+	$(CC) $(CCOBJFLAGS) $(RLSFLAGS) -o $@ $< $(INCLUDES)
 
 $(DBG_PATH)/%.o: $(SRC_PATH)/%.c*
 	$(CC) $(CCOBJFLAGS) $(DBGFLAGS) -o $@ $< $(INCLUDES)
