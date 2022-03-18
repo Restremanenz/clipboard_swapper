@@ -40,6 +40,12 @@ int main()
     res = splitData(fileContent, length, SEP_FIRST, SEP_SECOND, &pairs, &paircnt);
     assert(res == 0);
     
+    #ifdef LIBCLIPBOARD_BUILD_X11
+        // create clipboard object
+        clipboard_c *cb = clipboard_new(NULL);
+        assert(cb != NULL);
+    #endif
+
     // clipboard content of last iteration
     char *last_cb_content = malloc(1);
 
@@ -52,9 +58,11 @@ int main()
             Sleep(1000);
         #endif
 
-        // create clipboard object
-        clipboard_c *cb = clipboard_new(NULL);
-        assert(cb != NULL);
+        #ifndef LIBCLIPBOARD_BUILD_X11
+            // create clipboard object
+            clipboard_c *cb = clipboard_new(NULL);
+            assert(cb != NULL);
+        #endif
 
         // length of the clipboard content
         int len = 0;
@@ -115,12 +123,20 @@ int main()
 
         // free the variable that holds current clipboard content
         free(cb_content);
+
+        #ifndef LIBCLIPBOARD_BUILD_X11
         // free the clipboard for this iteration
         clipboard_free(cb);
+        #endif
     }
 
     // free last clipboard content and word pairs
     free(last_cb_content);
     free(pairs);
+
+    #ifdef LIBCLIPBOARD_BUILD_X11
+        // free the clipboard for this iteration
+        clipboard_free(cb);
+    #endif
     return 0;
 }
