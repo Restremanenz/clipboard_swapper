@@ -13,11 +13,7 @@
 
 // remove also \r when on windows since a newline in windows is \r\n
 #define SEP_FIRST ","
-#ifdef _WIN32
-#   define SEP_SECOND "\r\n"
-#else
-#   define SEP_SECPMD "\n"
-#endif
+#define SEP_SECOND "\n"
 
 int main()
 {
@@ -59,6 +55,7 @@ int main()
 
         // create clipboard object
         clipboard_c *cb = clipboard_new(NULL);
+        assert(cb != NULL);
 
         // length of the clipboard content
         int len = 0;
@@ -90,26 +87,31 @@ int main()
         if (i == paircnt)
         {
             cb_content = realloc(cb_content, 5 * sizeof(char));
-            strcpy(cb_content, "none\0");
+            assert(cb_content != NULL);
+            strcpy(cb_content, "none");
         }
         // found matching word in second word of pairs
         else if (reverse)
         {
             cb_content = realloc(cb_content, (strlen(pairs[i].first) + 1) * sizeof(char));
+            assert(cb_content != NULL);
             strcpy(cb_content, pairs[i].first);
         }
         // found matching word in first word of pairs
         else
         {
             cb_content = realloc(cb_content, (strlen(pairs[i].second) + 1) * sizeof(char));
+            assert(cb_content != NULL);
             strcpy(cb_content, pairs[i].second);
         }
 
         // copy the matching word to clipboard
-        clipboard_set_text_ex(cb, cb_content, strlen(cb_content), LCB_CLIPBOARD);
+        res = clipboard_set_text_ex(cb, cb_content, strlen(cb_content), LCB_CLIPBOARD);
+        assert(res == true);
 
         // update the last clipboard content with the current content
         last_cb_content = realloc(last_cb_content, len * sizeof(char) + 1);
+        assert(last_cb_content != NULL);
         strcpy(last_cb_content, cb_content);
 
         // free the variable that holds current clipboard content

@@ -1,6 +1,6 @@
 # tool macros
 CC ?= gcc
-CCFLAGS := -Wall -O2 -pedantic
+CCFLAGS := -Wall -O2 -pedantic -DNDEBUG
 DBGFLAGS := -g
 CCOBJFLAGS := $(CCFLAGS) -c
 
