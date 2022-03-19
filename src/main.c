@@ -11,9 +11,8 @@
 #  include <windows.h>
 #endif
 
-// remove also \r when on windows since a newline in windows is \r\n
-#define SEP_FIRST ","
-#define SEP_SECOND "\n"
+#define SEP_FIRST ","  // only one character!
+#define SEP_SECOND "\n" // only one character!
 
 int main()
 {

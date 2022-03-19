@@ -26,6 +26,8 @@
 int readFile(FILE *in, char **dataptr, size_t *sizeptr);
 
 
+#define RM_CR _WIN32 // if defined removes the carriage return at the second last position of the second word
+
 typedef struct spair_t
 {
    char* first;

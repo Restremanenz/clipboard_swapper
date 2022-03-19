@@ -96,6 +96,12 @@ int splitData(char *data, size_t size, const char *first_sep, const char *second
         pairs[paircnt++].second = strtok(NULL, second_sep);
         pairs = realloc(pairs, (paircnt + 1) * sizeof(spair_t));
         pairs[paircnt].first = strtok(NULL, first_sep);
+
+        #ifdef RM_CR
+            int cr = strlen(pairs[paircnt - 1].second) - 1;
+            if (pairs[paircnt - 1].second[cr] == '\r')
+                pairs[paircnt - 1].second[cr] = '\0';
+        #endif
     }
 
     *pairsptr = pairs;
