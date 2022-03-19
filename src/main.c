@@ -11,13 +11,21 @@
 #  include <windows.h>
 #endif
 
+// remove also \r when on windows since a newline in windows is \r\n
+#define SEP_FIRST ","
+#ifdef _WIN32
+#   define SEP_SECOND "\r\n"
+#else
+#   define SEP_SECPMD "\n"
+#endif
+
 int main()
 {
     char* fileContent = 0;
     size_t length = 0;
 
     // open file
-    FILE* f = fopen("./wordTable.txt", "rb");
+    FILE* f = fopen("../wordTable.txt", "rb");
     assert(f);
     
     // copy file content into string and file-length into variable
@@ -34,28 +42,83 @@ int main()
     size_t paircnt = 0;
 
     // split the file-content-string into pairs 
-    res = splitData(fileContent, length, ",", "\n", &pairs, &paircnt);
+    res = splitData(fileContent, length, SEP_FIRST, SEP_SECOND, &pairs, &paircnt);
     assert(res == 0);
-
-    // create clipboard object
-    clipboard_c *cb = clipboard_new(NULL);
     
-    char *cb_content = clipboard_text(cb);
     // clipboard content of last iteration
-    char *last_cb_content = cb_content;
+    char *last_cb_content = malloc(1);
 
     while(1)
-    {
+    {   
         // different sleep functions dependent on os
         #ifndef _WIN32
             sleep(1);
         #else
             Sleep(1000);
         #endif
+
+        // create clipboard object
+        clipboard_c *cb = clipboard_new(NULL);
+
+        // length of the clipboard content
+        int len = 0;
+        // clipboard content
+        char *cb_content = clipboard_text_ex(cb, &len, LCB_CLIPBOARD);
+
+        // check if content is NULL or changed since last iteration
+        if (cb_content == NULL || strcmp(last_cb_content, cb_content) == 0) continue;
+
+        // index of matching word (if existing)
+        size_t i;
+        // if second word is matching clipboard content
+        bool reverse = false;
+
+        // check if first word of pairs is matching clipboard content
+        for (i = 0; i < paircnt; i++)
+            if (strstr(cb_content, pairs[i].first) != NULL) break;
+        
+        // didn't find any matching words in first word of pairs
+        if (i == paircnt)
+        {
+            reverse = true;
+            // check if second word of pairs is matching clipboard content
+            for (i = 0; i < paircnt; i++)
+                if (strstr(cb_content, pairs[i].second) != NULL) break;
+        }
+
+        // didn't find any matching word in second word of pairs either
+        if (i == paircnt)
+        {
+            cb_content = realloc(cb_content, 5 * sizeof(char));
+            strcpy(cb_content, "none\0");
+        }
+        // found matching word in second word of pairs
+        else if (reverse)
+        {
+            cb_content = realloc(cb_content, (strlen(pairs[i].first) + 1) * sizeof(char));
+            strcpy(cb_content, pairs[i].first);
+        }
+        // found matching word in first word of pairs
+        else
+        {
+            cb_content = realloc(cb_content, (strlen(pairs[i].second) + 1) * sizeof(char));
+            strcpy(cb_content, pairs[i].second);
+        }
+
+        // copy the matching word to clipboard
+        clipboard_set_text_ex(cb, cb_content, strlen(cb_content), LCB_CLIPBOARD);
+
+        // update the last clipboard content with the current content
+        last_cb_content = realloc(last_cb_content, len * sizeof(char) + 1);
+        strcpy(last_cb_content, cb_content);
+
+        // free the variable that holds current clipboard content
+        free(cb_content);
+        // free the clipboard for this iteration
+        clipboard_free(cb);
     }
 
-    // free clipboard and other pointers
-    clipboard_free(cb);
+    // free last clipboard content and word pairs
     free(last_cb_content);
     free(pairs);
     return 0;
