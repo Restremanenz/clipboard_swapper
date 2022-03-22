@@ -79,7 +79,7 @@ int main()
 
         // check if first word of pairs is matching clipboard content
         for (i = 0; i < paircnt; i++)
-            if (strstr(cb_content, pairs[i].first) != NULL) break;
+            if (strstr(pairs[i].first, cb_content) != NULL) break;
         
         // didn't find any matching words in first word of pairs
         if (i == paircnt)
@@ -87,7 +87,7 @@ int main()
             reverse = true;
             // check if second word of pairs is matching clipboard content
             for (i = 0; i < paircnt; i++)
-                if (strstr(cb_content, pairs[i].second) != NULL) break;
+                if (strstr(pairs[i].second, cb_content) != NULL) break;
         }
 
         // didn't find any matching word in second word of pairs either
