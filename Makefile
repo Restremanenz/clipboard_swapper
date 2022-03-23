@@ -40,7 +40,7 @@ CLEAN_LIST := $(TARGET) \
 			  $(DISTCLEAN_LIST)
 
 # default rule
-default: makedir all
+default: makedir cpyfile all
 
 # non-phony targets
 $(TARGET): $(OBJ)
@@ -68,6 +68,13 @@ install:rmlib $(LIB_DIR) makedir all
 rmlib:
 	@rm -rf libclipboard
 
+.PHONY:cpyfile
+cpyfile:
+	@touch bin/wordTable.txt
+	@cp ./*.txt ./bin/wordTable.txt
+	@touch debug/wordTable.txt
+	@cp ./*.txt ./debug/wordTable.txt
+
 .PHONY: makedir
 makedir:
 	@mkdir -p $(BIN_PATH) $(OBJ_PATH) $(DBG_PATH)
@@ -81,7 +88,7 @@ debug: $(TARGET_DEBUG)
 .PHONY: clean
 clean:
 	@echo CLEAN $(CLEAN_LIST)
-	@rm -f $(CLEAN_LIST)
+	@rm -f $(CLEAN_LIST) bin/wordTable.txt ./debug/wordTable.txt
 
 .PHONY: distclean
 distclean:

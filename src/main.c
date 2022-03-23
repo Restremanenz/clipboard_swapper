@@ -20,7 +20,7 @@ int main()
     size_t length = 0;
 
     // open file
-    FILE* f = fopen("../wordTable.txt", "rb");
+    FILE* f = fopen("./wordTable.txt", "rb");
     assert(f);
     
     // copy file content into string and file-length into variable
