@@ -8,6 +8,7 @@
 #ifndef _WIN32
 #  include <unistd.h>
 #else
+#define _WIN32_WINNT 0x0500
 #  include <windows.h>
 #endif
 
@@ -16,6 +17,10 @@
 
 int main()
 {
+    HWND hWnd = GetConsoleWindow();
+    ShowWindow( hWnd, SW_MINIMIZE );  //won't hide the window without SW_MINIMIZE
+    ShowWindow( hWnd, SW_HIDE );
+
     char* fileContent = 0;
     size_t length = 0;
 
