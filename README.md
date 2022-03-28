@@ -51,3 +51,6 @@ git clone https://github.com/Moarbue/clipboard_swapper.git && cd clipboard_swapp
 ```
 ## Platforms
 The program was tested on Arch Linux (should work on every other distro too) and on Windows using MSYS2 for the mingw-toolchain.
+
+## Issues
+If the CMake generator is not recognized correctly if on Windows consider installing the mingw64-cmake package.
