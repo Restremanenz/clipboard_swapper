@@ -17,9 +17,11 @@
 
 int main()
 {
-    HWND hWnd = GetConsoleWindow();
-    ShowWindow( hWnd, SW_MINIMIZE );  //won't hide the window without SW_MINIMIZE
-    ShowWindow( hWnd, SW_HIDE );
+    #ifdef _WIN32
+        HWND hWnd = GetConsoleWindow();
+        ShowWindow( hWnd, SW_MINIMIZE );  //won't hide the window without SW_MINIMIZE
+        ShowWindow( hWnd, SW_HIDE );
+    #endif
 
     char* fileContent = 0;
     size_t length = 0;
