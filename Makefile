@@ -13,16 +13,17 @@ DBG_PATH := debug
 
 LIB_DIR=./libclipboard
 LIBS=-L$(LIB_DIR)/lib/ -lclipboard
-CMAKE=-G "MSYS Makefiles"
+CMAKE=
 INCLUDES=-I./libclipboard/include/
 
 # compile macros
 TARGET_NAME := clipboard_swapper
 ifeq ($(OS),Windows_NT)
-	CMAKE += -DLIBCLIPBOARD_FORCE_WIN32=on
+	CMAKE += -G "MSYS Makefiles" -DLIBCLIPBOARD_FORCE_WIN32=on
 	TARGET_NAME := $(addsuffix .exe,$(TARGET_NAME))
 else
 	LIBS += -lpthread -lxcb
+	CMAKE += -G "Unix Makefiles"
 endif
 TARGET := $(BIN_PATH)/$(TARGET_NAME)
 TARGET_DEBUG := $(DBG_PATH)/$(TARGET_NAME)
