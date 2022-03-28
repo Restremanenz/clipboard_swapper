@@ -13,7 +13,7 @@ DBG_PATH := debug
 
 LIB_DIR=./libclipboard
 LIBS=-L$(LIB_DIR)/lib/ -lclipboard
-CMAKE=
+CMAKE=-G "MSYS Makefiles"
 INCLUDES=-I./libclipboard/include/
 
 # compile macros
