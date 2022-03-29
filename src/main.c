@@ -8,7 +8,9 @@
 #ifndef _WIN32
 #  include <unistd.h>
 #else
-#define _WIN32_WINNT 0x0500
+#ifndef _WIN32_WINNT
+#   define _WIN32_WINNT 0x0500
+#endif
 #  include <windows.h>
 #endif
 

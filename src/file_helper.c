@@ -98,7 +98,7 @@ int splitData(char *data, size_t size, const char *first_sep, const char *second
         pairs[paircnt].first = strtok(NULL, first_sep);
 
         #ifdef RM_CR
-            int cr = strlen(pairs[paircnt - 1].second) - 1;
+            int cr = strnlen(pairs[paircnt - 1].second, MAX_LENGTH) - 1;
             if (pairs[paircnt - 1].second[cr] == '\r')
                 pairs[paircnt - 1].second[cr] = '\0';
         #endif
